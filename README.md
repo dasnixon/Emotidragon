@@ -18,8 +18,6 @@ Use RubyGems to install emotidragon
 
     $ gem install emotidragon 
 
-## What can I do? Remember, emotidragon gets included into String class, so you can call methods on an instance of String
-
 ## Method List
 ### emoticons - get array of all emoticons
     "I love science :). I hate nickelback :(".emoticions
@@ -31,7 +29,7 @@ Use RubyGems to install emotidragon
 
 ### negative_emoticons - get array of negative emoticons
     "I love science :). I hate nickelback :(".positive_emoticions
-    -> [":)"]
+    -> [":("]
     
 ### emoticon? - determine if string contains an emoticon
     "i love science :). i hate nickelback :(".emoticion?
