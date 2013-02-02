@@ -1,21 +1,84 @@
-class Emotidragon
-  def contains_happy_emoticon?(text)
-    /\|?>?[:*;Xx8=]-?o?\^?[DPpb3)}\]>]\)?/.match(text) ? true : false
+module Emotidragon #http://en.wikipedia.org/wiki/List_of_emoticons
+  POSITIVE_EMOTICONS = /\|?>?[:*;Xx8=]-?o?\^?[DPpb3)}\]>]\)?/
+  NEGATIVE_EMOTICONS = /([:><].?-?[@><cC(\[{\|]\|?|[D][:8;=X]<?|v.v)/
+
+  #gets an array of all matching emoticons in the text
+  def emoticons
+    (positive_emoticons + negative_emoticons)
   end
 
-  def contains_sad_emoticon?(text)
-    /([:><].?-?[@><cC(\[{\|]\|?|[D][:8;=X]<?|v.v)/.match(text) ? true : false
+  #gets an array of the matching positive emoticons in the text
+  def positive_emoticons
+    self.scan(POSITIVE_EMOTICONS).flatten
   end
 
-  def ranking_sentiment_of_text(text)
-    pos_count, neg_count = text.scan(/\|?>?[:*;Xx8=]-?o?\^?[DPpb3)}\]>]\)?/).count, text.scan(/([:><].?-?[@><cC(\[{\|]\|?|[D][:8;=X]<?|v.v)/).count
-    total_count = pos_count - neg_count
-    if total_count > 0
-      return { :sentiment => "positive", :num_pos_matches => pos_count, :num_neg_matches => neg_count, :score => total_count }
-    elsif total_count == 0
-      return { :sentiment => "neutral", :num_pos_matches => pos_count, :num_neg_matches => neg_count, :score => 0 }
+  #gets an array of the matching negative emoticons in the text
+  def negative_emoticons
+    self.scan(NEGATIVE_EMOTICONS).flatten
+  end
+
+  #contains any emoticon?
+  def emoticon?
+    (positive_emoticon? || negative_emoticon?)
+  end
+
+  #checks if the text has a positive emoticon
+  def positive_emoticon?
+    self =~ POSITIVE_EMOTICONS
+  end
+
+  #checks if the text has a negative emoticon
+  def negative_emoticon?
+    self =~ NEGATIVE_EMOTICONS
+  end
+
+  #get total number of emoticons
+  def number_of_emoticons
+    positive_count + negative_count
+  end
+
+  #number of positive emoticons
+  def positive_count
+    positive_emoticons.count
+  end
+
+  #number of negative emoticons
+  def negative_count
+    negative_emoticons.count
+  end
+
+  #sentiment based on emoticons
+  def text_sentiment
+    count = positive_emoticons.count - negative_emoticons.count
+    if count > 0
+      "positive"
+    elsif count < 0
+      "negative"
     else
-      return { :sentiment => "negative", :num_pos_matches => pos_count, :num_neg_matches => neg_count, :score => total_count }
+      "neutral"
     end
+  end
+
+  #gets more info regarding the sentiment of the text
+  def sentiment_info
+    pos_count, neg_count = positive_count, negative_count
+    count = pos_count - neg_count
+    if count > 0
+      Emotidragon.score_hash("positive", pos_count, neg_count, count)
+    elsif count < 0
+      Emotidragon.score_hash("negative", pos_count, neg_count, count)
+    else
+      Emotidragon.score_hash("neutral", pos_count, neg_count, count)
+    end
+  end
+
+  #include Emotidragon into String class
+  String.send(:include, Emotidragon)
+
+  private
+
+  #hash returned that contains information regarding text
+  def self.score_hash(sentiment, pos_count, neg_count, count)
+    { sentiment: sentiment, positive_count: pos_count, negative_count: neg_count, difference: count.abs }
   end
 end
