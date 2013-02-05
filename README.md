@@ -1,5 +1,8 @@
 # Emotidragon: Emoticons! ROAR!
 
+[Rubygems](https://rubygems.org/gems/emotidragon)
+[Rubydoc](http://rubydoc.info/github/liamneesonsarm/Emotidragon/master/frames)
+
 Emotidragon acts on String objects to help ruby devs work with emoticons, what can you do: 
 
  * get an array of all emoticons
