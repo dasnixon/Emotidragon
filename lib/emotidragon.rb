@@ -1,4 +1,8 @@
+require 'emotidragon/eastern'
+
 module Emotidragon #http://en.wikipedia.org/wiki/List_of_emoticons
+  autoload :Eastern, 'emotidragon/eastern'
+
   POSITIVE_EMOTICONS = /\|?>?[:*;Xx8=]-?o?\^?[DPpb3)}\]>]\)?/
   NEGATIVE_EMOTICONS = /([:><].?-?[@><cC(\[{\|]\|?|[D][:8;=X]<?|v.v)/
 
